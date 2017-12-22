@@ -1,4 +1,6 @@
-import download
+import download_ncbi
+import download_acrdb
 
-#download.index_ncbi()
-download.gbk_ncbi()
+#download_ncbi.index_ncbi()
+download_ncbi.gbk_ncbi(True)
+download_acrdb.acrdb()
