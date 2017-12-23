@@ -50,19 +50,20 @@ def gbk_ncbi(onlyComplete = False):
         os.makedirs(os.path.abspath(path_store))
 
         with open(index_path) as f:
-            reader = csv.reader(f, delimiter='\t', names=COLUMN_NAMES)
+            reader = csv.DictReader(f, delimiter='\t')
+            reader.fieldnames = COLUMN_NAMES
 
             first_header_line = next(reader)
-            second_header_line = next(reader)e
+            second_header_line = next(reader)
 
             for row in reader:
 
-                if onlyComplete == True and row[11] != "complete":
+                if onlyComplete == True and row["assembly_level"] != "Complete Genome":
                     continue
 
                 for type in TYPES:
-                    gbk_url = '{}/{}_{}_{}'.format(row[19].replace('ftp://','https://'), row[0], row[15], type)
-                    filename_url = '{}_{}_{}'.format(row[0], row[15], type)
+                    gbk_url = '{}/{}_{}_{}'.format(row["ftp_path"].replace('ftp://','https://'), row["assembly_accession"], row["asm_name"], type)
+                    filename_url = '{}_{}_{}'.format(row["assembly_accession"], row["asm_name"], type)
                     print(gbk_url)
 
                     r = http.request('GET', gbk_url, preload_content=False)
