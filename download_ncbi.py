@@ -42,7 +42,7 @@ def index_ncbi():
         r.release_conn()
 
 
-def gbk_ncbi(onlyComplete = False):
+def gbk_ncbi(onlyComplete = False, subset=999999):
     for (index_path, path_store) in STORES:
 
         if os.path.exists(os.path.abspath(path_store)):
@@ -55,6 +55,8 @@ def gbk_ncbi(onlyComplete = False):
 
             first_header_line = next(reader)
             second_header_line = next(reader)
+
+            subset_counter = 0
 
             for row in reader:
 
@@ -74,3 +76,7 @@ def gbk_ncbi(onlyComplete = False):
                                 break
                             out.write(data)
                     r.release_conn()
+
+                subset_counter += 1
+                if subset_counter == subset:
+                    break
