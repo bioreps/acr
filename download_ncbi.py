@@ -3,6 +3,7 @@ import certifi
 import shutil
 import os
 import csv
+import json
 
 COLUMN_NAMES = ["assembly_accession", "bioproject", "biosample", "wgs_master",
                 "refseq_category", "taxid", "species_taxid", "organism_name",
@@ -68,11 +69,18 @@ def gbk_ncbi(onlyComplete = False, subset=999999):
                     continue
 
                 for type in TYPES:
-                    gbk_url = '{}{}_{}_{}'.format(row["ftp_path"].replace('ftp://','https://'), row["assembly_accession"], row["asm_name"], type)
+                    gbk_url = '{}/{}_{}_{}'.format(row["ftp_path"].replace('ftp://','https://'), row["assembly_accession"], row["asm_name"], type)
                     filename_url = '{}_{}_{}'.format(row["assembly_accession"], row["asm_name"], type)
                     print(gbk_url)
 
+                    rtest = http.request('HEAD', gbk_url, preload_content=False)
+                    if rtest.headers["Content-Type"] != "application/x-gzip":
+                        print("skipping last")
+                        continue
+                    rtest.release_conn()
+
                     r = http.request('GET', gbk_url, preload_content=False)
+
                     with open(os.path.abspath(path_store+filename_url), 'wb') as out:
                         while True:
                             data = r.read()

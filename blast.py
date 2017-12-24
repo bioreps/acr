@@ -24,18 +24,19 @@ def blast_anti_crispr_run():
     for domain in GBK_PATHS:
         for filename in os.listdir(domain):
             if filename.endswith(".faa.gz"):
-                filename_out = filename.replace('.faa.gz', '.blastpOut')
-                filename_filtered = filename.replace('.faa.gz', '.blastpFiltered')
+                filename_out = filename.replace('.faa.gz', '.acrBlastpOut')
+                filename_filtered = filename.replace('.faa.gz', '.acrBlastpFiltered')
                 cmd = "zcat {}{} " \
                       "| {} -db {} -out {}{} -num_threads {} " \
                       "-outfmt \"6 qseqid sseqid qlen slen length pident gapopen evalue\" " \
-                      "-evalue 0.001".format(
+                      "-evalue 0.01".format(
                     domain, filename,
                     BLASTP_PATH, ACR_PROT_BLASTDB,
                     BLAST_PATH, filename_out,
                     global_param.NUMBER_OF_THREADS)
                 os.system(cmd)
-                cmd = "awk -F '\t' '{{ if (($6>90) && ($3*0.9<$5)) {{print}} }}' {}{} > {}{}".format(
+                cmd = "awk -F '\t' '{{ if (($6>80) && ($3*0.9<$5)) {{print}} }}' {}{} > {}{}".format(
                     BLAST_PATH, filename_out,
                     BLAST_PATH, filename_filtered)
                 os.system(cmd)
+                os.remove("{}{}".format(BLAST_PATH, filename_out))
