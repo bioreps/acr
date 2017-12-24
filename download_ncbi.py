@@ -22,10 +22,14 @@ INDEX_URL_VIRAL = "https://ftp.ncbi.nlm.nih.gov/genomes/refseq/viral/assembly_su
 INDEX_PATH_VIRAL = "download_ncbi/viral_assembly_summary.txt"
 GBK_PATH_VIRAL = "download_ncbi/viral_assembly_summary/"
 
-INDEX = [(INDEX_URL_BACT, INDEX_PATH_BACT), (INDEX_URL_ARCH, INDEX_PATH_ARCH), (INDEX_URL_VIRAL, INDEX_PATH_VIRAL)]
-STORES = [(INDEX_PATH_BACT, GBK_PATH_BACT), (INDEX_PATH_ARCH, GBK_PATH_ARCH), (INDEX_PATH_VIRAL, GBK_PATH_VIRAL)]
+#INDEX = [(INDEX_URL_BACT, INDEX_PATH_BACT), (INDEX_URL_ARCH, INDEX_PATH_ARCH), (INDEX_URL_VIRAL, INDEX_PATH_VIRAL)]
+#STORES = [(INDEX_PATH_BACT, GBK_PATH_BACT), (INDEX_PATH_ARCH, GBK_PATH_ARCH), (INDEX_PATH_VIRAL, GBK_PATH_VIRAL)]
 
-TYPES = ["genomic.gbff.gz", "protein.faa.gz", "genomic.fna.gz"]
+INDEX = [(INDEX_URL_VIRAL, INDEX_PATH_VIRAL)]
+STORES = [(INDEX_PATH_VIRAL, GBK_PATH_VIRAL)]
+
+#TYPES = ["genomic.gbff.gz", "protein.faa.gz", "genomic.fna.gz"]
+TYPES = ["protein.faa.gz"]
 
 http = urllib3.PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
 
@@ -64,7 +68,7 @@ def gbk_ncbi(onlyComplete = False, subset=999999):
                     continue
 
                 for type in TYPES:
-                    gbk_url = '{}/{}_{}_{}'.format(row["ftp_path"].replace('ftp://','https://'), row["assembly_accession"], row["asm_name"], type)
+                    gbk_url = '{}{}_{}_{}'.format(row["ftp_path"].replace('ftp://','https://'), row["assembly_accession"], row["asm_name"], type)
                     filename_url = '{}_{}_{}'.format(row["assembly_accession"], row["asm_name"], type)
                     print(gbk_url)
 

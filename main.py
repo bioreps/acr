@@ -3,9 +3,9 @@ import download_acrdb
 import blast
 
 #download_ncbi.index_ncbi()
-download_ncbi.gbk_ncbi(onlyComplete=True, subset=100)
+#download_ncbi.gbk_ncbi(onlyComplete=True, subset=10000)
 
-download_acrdb.acrdb()
+#download_acrdb.acrdb()
 
-blast.blast_anti_crispr_gendb()
+#blast.blast_anti_crispr_gendb()
 blast.blast_anti_crispr_run()
