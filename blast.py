@@ -1,4 +1,5 @@
 import os
+import glob
 import global_param
 
 BLAST_PATH = "blast/"
@@ -10,8 +11,8 @@ GBK_PATH_BACT = "download_ncbi/bacteria_assembly_summary/"
 GBK_PATH_ARCH = "download_ncbi/archaea_assembly_summary/"
 GBK_PATH_VIRAL = "download_ncbi/viral_assembly_summary/"
 
-#GBK_PATHS = [GBK_PATH_BACT, GBK_PATH_ARCH, GBK_PATH_VIRAL]
-GBK_PATHS = [GBK_PATH_VIRAL]
+GBK_PATHS = [GBK_PATH_BACT, GBK_PATH_ARCH, GBK_PATH_VIRAL]
+#GBK_PATHS = [GBK_PATH_VIRAL]
 
 
 BLASTOUTPUT = "blast"
@@ -21,6 +22,8 @@ def blast_anti_crispr_gendb():
     os.system(cmd)
 
 def blast_anti_crispr_run():
+    for to_remove in glob.glob("{}{}".format(BLAST_PATH, "*BlastpFiltered")):
+        os.remove(to_remove)
     for domain in GBK_PATHS:
         for filename in os.listdir(domain):
             if filename.endswith(".faa.gz"):
@@ -35,7 +38,7 @@ def blast_anti_crispr_run():
                     BLAST_PATH, filename_out,
                     global_param.NUMBER_OF_THREADS)
                 os.system(cmd)
-                cmd = "awk -F '\t' '{{ if (($6>80) && ($3*0.9<$5)) {{print}} }}' {}{} > {}{}".format(
+                cmd = "awk -F '\t' '{{ if (($6>80) && ($3*0.8<$5)) {{print}} }}' {}{} > {}{}".format(
                     BLAST_PATH, filename_out,
                     BLAST_PATH, filename_filtered)
                 os.system(cmd)
