@@ -8,4 +8,6 @@ download_ncbi.gbk_ncbi(onlyComplete=True, subset=999999)
 download_acrdb.acrdb()
 
 blast.blast_anti_crispr_gendb()
+blast.blast_aca_gendb()
 blast.blast_anti_crispr_run()
+blast.blast_aca_run()
