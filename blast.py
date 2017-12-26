@@ -1,5 +1,5 @@
 import os
-import glob
+import globp
 import global_param
 
 BLAST_PATH = "blast/"
@@ -14,7 +14,7 @@ GBK_PATH_ARCH = "download_ncbi/archaea_assembly_summary/"
 GBK_PATH_VIRAL = "download_ncbi/viral_assembly_summary/"
 
 #GBK_PATHS = [GBK_PATH_BACT, GBK_PATH_ARCH, GBK_PATH_VIRAL]
-GBK_PATHS = [GBK_PATH_ARCH]
+GBK_PATHS = [GBK_PATH_BACT]
 
 
 BLASTOUTPUT = "blast"
