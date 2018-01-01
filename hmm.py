@@ -2,6 +2,7 @@ import os
 import glob
 import global_param
 
+HMMSEARCH_PATH = "/usr/bin/hmmsearch"
 HMM_PATH = "CAS_hmm/"
 HMM_DBS = "CAS_hmm/extracted_dbs/"
 HMM_OUT = "CAS_hmm/hmmsearch_out/"
@@ -22,27 +23,23 @@ def hmm_clean_folders():
 
 def hmm_run(subset=999999):
     for domain in GBK_PATHS:
-        subset_count = 0
-        for filename in os.listdir(domain):
-            if filename.endswith(".faa.gz"):
-                filename_out = filename.replace('.faa.gz', '.acrBlastpOut')
-                filename_filtered = filename.replace('.faa.gz', '.blastpFiltered')
-                if os.path.exists(filename_filtered):
-                    continue
-                cmd = "zcat {}{} " \
-                      "| {} -db {} -out {}{} -num_threads {} " \
-                      "-outfmt \"6 qseqid sseqid qlen slen length pident gapopen evalue\" " \
-                      "-evalue 0.01".format(
-                    domain, filename,
-                    BLASTP_PATH, ACR_PROT_BLASTDB,
-                    BLAST_PATH, filename_out,
-                    global_param.NUMBER_OF_THREADS)
-                os.system(cmd)
-                cmd = "awk -F '\t' '{{ if (($6>70) && ($3*0.7<$5)) {{print}} }}' {}{} >> {}{}".format(
-                    BLAST_PATH, filename_out,
-                    BLAST_PATH, filename_filtered)
-                os.system(cmd)
-                os.remove("{}{}".format(BLAST_PATH, filename_out))
-            subset_count += 1
-            if subset == subset_count:
-                break
+        for (hmm_name, hmm_path) in HMM_DB:
+            subset_count = 0
+            for filename in os.listdir(domain):
+                if filename.endswith(".faa.gz"):
+                    filename_out = filename.replace('.faa.gz', '.'+hmm_name+'.hmmsearchOut')
+                    filename_filtered = filename.replace('.faa.gz', '.'+hmm_name+'.hmmsearchFiltered')
+                    if os.path.exists(filename_filtered):
+                        continue
+                    cmd = "zcat {}{} " \
+                          "| {} - {} --cpu {} > {}{}".format(
+                        domain, filename,
+                        HMMSEARCH_PATH, hmm_path,
+                        global_param.NUMBER_OF_THREADS,
+                        HMM_OUT, filename_out
+                    )
+                    os.system(cmd)
+                    #os.remove("{}{}".format(BLAST_PATH, filename_out))
+                subset_count += 1
+                if subset == subset_count:
+                    break
