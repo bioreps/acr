@@ -1,11 +1,11 @@
 import os
-import globp
+import glob
 import global_param
 
 BLAST_PATH = "blast/"
 MAKEBLASTDB_PATH = "utils/blast/ncbi-blast-2.7.1+/bin/makeblastdb"
 BLASTP_PATH = "utils/blast/ncbi-blast-2.7.1+/bin/blastp"
-ACR_PROT_PATH = "download_acrdb/proteinSequence.faa"
+ACR_PROT_PATH = "download_acrdb/proteinSequence_clust.faa" # here we use our own clustered db
 ACA_PROT_PATH = "aca_seqs/acaSequences.faa"
 ACR_PROT_BLASTDB = "blast/acrdb_db"
 ACA_PROT_BLASTDB = "blast/aca_db"
@@ -30,13 +30,18 @@ def blast_aca_gendb():
 def blast_clean_folder():
     for to_remove in glob.glob("{}{}".format(BLAST_PATH, "*.blastpFiltered")):
         os.remove(to_remove)
+    for to_remove in glob.glob("{}{}".format(BLAST_PATH, "*BlastpOut")):
+        os.remove(to_remove)
 
-def blast_anti_crispr_run():
+def blast_anti_crispr_run(subset=999999):
     for domain in GBK_PATHS:
+        subset_count = 0
         for filename in os.listdir(domain):
             if filename.endswith(".faa.gz"):
                 filename_out = filename.replace('.faa.gz', '.acrBlastpOut')
                 filename_filtered = filename.replace('.faa.gz', '.blastpFiltered')
+                if os.path.exists(filename_filtered):
+                    continue
                 cmd = "zcat {}{} " \
                       "| {} -db {} -out {}{} -num_threads {} " \
                       "-outfmt \"6 qseqid sseqid qlen slen length pident gapopen evalue\" " \
@@ -51,13 +56,19 @@ def blast_anti_crispr_run():
                     BLAST_PATH, filename_filtered)
                 os.system(cmd)
                 os.remove("{}{}".format(BLAST_PATH, filename_out))
+            subset_count+=1
+            if subset == subset_count:
+                break
 
-def blast_aca_run():
+def blast_aca_run(subset=999999):
     for domain in GBK_PATHS:
+        subset_count=0
         for filename in os.listdir(domain):
             if filename.endswith(".faa.gz"):
                 filename_out = filename.replace('.faa.gz', '.acaBlastpOut')
                 filename_filtered = filename.replace('.faa.gz', '.blastpFiltered')
+                if os.path.exists(filename_filtered):
+                    continue
                 cmd = "zcat {}{} " \
                       "| {} -db {} -out {}{} -num_threads {} " \
                       "-outfmt \"6 qseqid sseqid qlen slen length pident gapopen evalue\" " \
@@ -72,3 +83,6 @@ def blast_aca_run():
                     BLAST_PATH, filename_filtered)
                 os.system(cmd)
                 os.remove("{}{}".format(BLAST_PATH, filename_out))
+            subset_count += 1
+            if subset == subset_count:
+                break

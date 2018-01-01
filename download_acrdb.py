@@ -30,5 +30,5 @@ def acrdb():
         r.release_conn()
 
 def acrdb_clust():
-    cmd = "cd-hit -i {}{} -o {}{} -c 1.0".format(TARGET_PATH, NAME_PROT_CLUSTERED, TARGET_PATH, NAME_PROT_CLUSTERED)
+    cmd = "cd-hit -i {}{} -o {}{} -c 1.0".format(TARGET_PATH, NAME_PROT, TARGET_PATH, NAME_PROT_CLUSTERED)
     os.system(cmd)
