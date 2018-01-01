@@ -12,6 +12,8 @@ GBK_PATH_VIRAL = "download_ncbi/viral_assembly_summary/"
 #GBK_PATHS = [GBK_PATH_BACT, GBK_PATH_ARCH, GBK_PATH_VIRAL]
 GBK_PATHS = [GBK_PATH_BACT]
 
+HMM_DB = [("tigr","TIGRFAMs_modelsCRISPR.hmm"),("pfam","Pfam-A_modelsCRISPR.hmm"),("novel","novel_modelsCRISPR.hmm")]
+
 def hmm_clean_folders():
     for to_remove in glob.glob("{}{}".format(HMM_OUT, "*.hmmsearchFiltered")):
         os.remove(to_remove)
