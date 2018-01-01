@@ -1,6 +1,7 @@
 import download_ncbi
 import download_acrdb
 import blast
+import hmm
 
 #download_ncbi.index_ncbi()
 #download_ncbi.gbk_ncbi(onlyComplete=True, subset=999999)
@@ -14,5 +15,7 @@ import blast
 
 #blast.blast_clean_folder()
 
-blast.blast_anti_crispr_run(subset=20)
-blast.blast_aca_run(subset=20)
+#blast.blast_anti_crispr_run(subset=20)
+#blast.blast_aca_run(subset=20)
+
+hmm.hmm_clean_folders()
