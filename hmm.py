@@ -2,7 +2,7 @@ import os
 import glob
 import global_param
 
-HMMSEARCH_PATH = "/usr/bin/hmmsearch"
+HMMSEARCH_PATH = "/usr/bin/hmmscan"
 HMM_PATH = "CAS_hmm/"
 HMM_DBS = "CAS_hmm/extracted_dbs/"
 HMM_OUT = "CAS_hmm/hmmsearch_out/"
@@ -32,14 +32,18 @@ def hmm_run(subset=999999):
                     if os.path.exists(filename_filtered):
                         continue
                     cmd = "zcat {}{} " \
-                          "| {} - {} --cpu {} > {}{}".format(
+                          "| {} -E 1e-12 --domE 1e-12 --cpu {} --tblout {}{} {}{} - >> CAS_hmm/hmmsearch_out/text.txt".format(
                         domain, filename,
-                        HMMSEARCH_PATH, hmm_path,
-                        global_param.NUMBER_OF_THREADS,
-                        HMM_OUT, filename_out
+                        HMMSEARCH_PATH, global_param.NUMBER_OF_THREADS,
+                        HMM_OUT, filename_out,
+                        HMM_DBS, hmm_path
                     )
                     os.system(cmd)
-                    #os.remove("{}{}".format(BLAST_PATH, filename_out))
+                    cmd = "sed 's/  */ /g' {}{} | grep -v ^# | awk '!seen[$3]++' >> {}{}".format(
+                        HMM_OUT, filename_out,
+                        HMM_OUT, filename_filtered)
+                    os.system(cmd)
+                    #os.remove("{}{}".format(HMM_OUT, filename_out))
                 subset_count += 1
                 if subset == subset_count:
                     break
