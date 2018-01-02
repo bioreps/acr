@@ -19,4 +19,4 @@ import hmm
 #blast.blast_aca_run(subset=20)
 
 hmm.hmm_clean_folders()
-hmm.hmm_run_cas(subset=20)
+hmm.hmm_run_cas(subset=200)
