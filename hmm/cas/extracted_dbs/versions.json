@@ -1,0 +1,9 @@
+{
+	"file": "versions_hmm",
+	"versions": {
+		"tigr": 15.0,
+		"pfam": 31.0,
+		"novel": "2018-01-01"
+	},
+	"date": "2018-01-01"
+}
