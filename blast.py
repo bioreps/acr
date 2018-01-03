@@ -2,13 +2,14 @@ import os
 import glob
 import global_param
 
-BLAST_PATH = "blast/"
+BLAST_ACA_OUT = "blast/aca/blast_out/"
+BLAST_ACR_OUT = "blast/acr/blast_out/"
 MAKEBLASTDB_PATH = "utils/blast/ncbi-blast-2.7.1+/bin/makeblastdb"
 BLASTP_PATH = "utils/blast/ncbi-blast-2.7.1+/bin/blastp"
 ACR_PROT_PATH = "download_acrdb/proteinSequence_clust.faa" # here we use our own clustered db
 ACA_PROT_PATH = "aca_seqs/acaSequences.faa"
-ACR_PROT_BLASTDB = "blast/acrdb_db"
-ACA_PROT_BLASTDB = "blast/aca_db"
+ACR_PROT_BLASTDB = "blast/acr/db/"
+ACA_PROT_BLASTDB = "blast/aca/db"
 GBK_PATH_BACT = "download_ncbi/bacteria_assembly_summary/"
 GBK_PATH_ARCH = "download_ncbi/archaea_assembly_summary/"
 GBK_PATH_VIRAL = "download_ncbi/viral_assembly_summary/"
@@ -28,9 +29,13 @@ def blast_aca_gendb():
     os.system(cmd)
 
 def blast_clean_folder():
-    for to_remove in glob.glob("{}{}".format(BLAST_PATH, "*.blastpFiltered")):
+    for to_remove in glob.glob("{}{}".format(BLAST_ACR_OUT, "*.blastpFiltered")):
         os.remove(to_remove)
-    for to_remove in glob.glob("{}{}".format(BLAST_PATH, "*BlastpOut")):
+    for to_remove in glob.glob("{}{}".format(BLAST_ACR_OUT, "*BlastpOut")):
+        os.remove(to_remove)
+    for to_remove in glob.glob("{}{}".format(BLAST_ACA_OUT, "*.blastpFiltered")):
+        os.remove(to_remove)
+    for to_remove in glob.glob("{}{}".format(BLAST_ACA_OUT, "*BlastpOut")):
         os.remove(to_remove)
 
 def blast_anti_crispr_run(subset=999999):
@@ -48,14 +53,14 @@ def blast_anti_crispr_run(subset=999999):
                       "-evalue 0.01".format(
                     domain, filename,
                     BLASTP_PATH, ACR_PROT_BLASTDB,
-                    BLAST_PATH, filename_out,
+                    BLAST_ACR_OUT, filename_out,
                     global_param.NUMBER_OF_THREADS)
                 os.system(cmd)
                 cmd = "awk -F '\t' '{{ if (($6>70) && ($3*0.7<$5)) {{print}} }}' {}{} >> {}{}".format(
-                    BLAST_PATH, filename_out,
-                    BLAST_PATH, filename_filtered)
+                    BLAST_ACR_OUT, filename_out,
+                    BLAST_ACR_OUT, filename_filtered)
                 os.system(cmd)
-                os.remove("{}{}".format(BLAST_PATH, filename_out))
+                os.remove("{}{}".format(BLAST_ACR_OUT, filename_out))
             subset_count+=1
             if subset == subset_count:
                 break
@@ -75,14 +80,14 @@ def blast_aca_run(subset=999999):
                       "-evalue 0.01".format(
                     domain, filename,
                     BLASTP_PATH, ACA_PROT_BLASTDB,
-                    BLAST_PATH, filename_out,
+                    BLAST_ACA_OUT, filename_out,
                     global_param.NUMBER_OF_THREADS)
                 os.system(cmd)
                 cmd = "awk -F '\t' '{{ if (($6>70) && ($3*0.7<$5)) {{print}} }}' {}{} >> {}{}".format(
-                    BLAST_PATH, filename_out,
-                    BLAST_PATH, filename_filtered)
+                    BLAST_ACA_OUT, filename_out,
+                    BLAST_ACA_OUT, filename_filtered)
                 os.system(cmd)
-                os.remove("{}{}".format(BLAST_PATH, filename_out))
+                os.remove("{}{}".format(BLAST_ACA_OUT, filename_out))
             subset_count += 1
             if subset == subset_count:
                 break
