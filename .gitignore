@@ -1,5 +1,5 @@
 download_ncbi/
-blast/*Filtered
+blast/
 hmm/cas/hmmscan_out/
 hmm/cas/raw_dbs/
 utils/
