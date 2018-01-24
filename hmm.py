@@ -30,7 +30,7 @@ def hmm_run_cas(domains, subset=999999):
                         continue
                     # Do a hmmscan run
                     cmd = "zcat {}{} " \
-                          "| {} --cut_tc --cpu {} --tblout {}{} {}{} - >> /dev/null".format(
+                          "| {} -E 1e-7 --cpu {} --tblout {}{} {}{} - >> /dev/null".format( #"| {} --cut_tc --cpu {} --tblout {}{} {}{} - >> /dev/null".format(
                         domain, filename,
                         HMMSEARCH_PATH, NUMBER_OF_THREADS,
                         HMM_CAS_OUT, filename_out,

@@ -17,3 +17,5 @@ HMMSEARCH_PATH = "/usr/bin/hmmscan"
 HMM_CAS_DBS = "hmm/cas/extracted_dbs/"
 HMM_CAS_OUT = "hmm/cas/hmmscan_out/"
 HMM_DB = [("tigr","TIGRFAMs_modelsCRISPR.hmm"),("pfam","Pfam-A_modelsCRISPR.hmm"),("novel","novel_modelsCRISPR.hmm")]
+
+PILERCR_PATH = "/home/michael/Software/pilercr/pilercr1.06/pilercr"
